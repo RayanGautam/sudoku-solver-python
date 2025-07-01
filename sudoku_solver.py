@@ -1,5 +1,3 @@
-# sudoku_solver.py
-
 def get_user_board():
     print("Enter your Sudoku puzzle row by row (use 0 for empty cells):")
     board = []
@@ -18,12 +16,11 @@ def get_user_board():
                 print("Invalid input:", ve)
     return board
 
-
 def print_board(b):
-    for i in range(len(b)):
+    for i in range(9):
         if i % 3 == 0 and i != 0:
             print("-" * 21)
-        for j in range(len(b[0])):
+        for j in range(9):
             if j % 3 == 0 and j != 0:
                 print(" | ", end="")
             if j == 8:
@@ -31,61 +28,45 @@ def print_board(b):
             else:
                 print(str(b[i][j]) + " ", end="")
 
-
 def find_empty(b):
-    for i in range(len(b)):
-        for j in range(len(b[0])):
+    for i in range(9):
+        for j in range(9):
             if b[i][j] == 0:
-                return (i, j)  # row, col
+                return (i, j)
     return None
-
 
 def is_valid(b, num, pos):
     row, col = pos
-
-    # Check row
-    for i in range(len(b[0])):
+    for i in range(9):
         if b[row][i] == num and col != i:
             return False
-
-    for i in range(len(b)):
+    for i in range(9):
         if b[i][col] == num and row != i:
             return False
-
     box_x = col // 3
     box_y = row // 3
-
     for i in range(box_y * 3, box_y * 3 + 3):
         for j in range(box_x * 3, box_x * 3 + 3):
             if b[i][j] == num and (i, j) != pos:
                 return False
-
     return True
-
 
 def solve(b):
     find = find_empty(b)
     if not find:
-        return True  # Solved
-    else:
-        row, col = find
-
+        return True
+    row, col = find
     for i in range(1, 10):
         if is_valid(b, i, (row, col)):
             b[row][col] = i
-
             if solve(b):
                 return True
-
             b[row][col] = 0
-
     return False
 
 board = get_user_board()
-
 print("\nOriginal Sudoku:")
 print_board(board)
-
 if solve(board):
     print("\nSolved Sudoku:")
     print_board(board)
